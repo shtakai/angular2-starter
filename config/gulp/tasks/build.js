@@ -7,8 +7,30 @@ var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
 var uglify = require('gulp-uglify');
 var cssnano = require('gulp-cssnano');
+var rollup = require('rollup');
+var nodeResolve = require('rollup-plugin-node-resolve');
+var commonjs = require('rollup-plugin-commonjs');
 
 require('@ngstarter/systemjs-extension')(config);
+
+gulp.task('rollup', function () {
+    rollup.rollup({
+        entry: 'src/tmp/app/main.js',
+        plugins: [
+            // nodeResolve({jsnext: true, main: true}),
+            // commonjs({ include: 'node_modules/**' })
+        ]
+    })
+    .then(function (bundle) {
+        console.log('Bundling done.');
+        bundle.write({
+            format: 'cjs',
+            dest: 'rollup.bundle.js'
+        })
+    }, function (err) {
+        console.log(err);
+    });
+});
 
 gulp.task('build', function (done) {
     runSequence('test', 'build-systemjs', 'build-assets', done);
