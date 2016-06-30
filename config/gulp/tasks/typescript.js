@@ -27,6 +27,10 @@ gulp.task('tsc', ['clean-ts'], function () {
     return compileTs(tsFiles);
 });
 
+gulp.task('tsc-es6', ['clean-ts'], function () {
+    return compileTs(tsFiles, false, true);
+});
+
 gulp.task('tsc-app', ['clean-ts-app'], function () {
     return compileTs(config.tsFiles);
 });
@@ -64,16 +68,32 @@ function lintTs(files) {
         }));
 }
 
-function compileTs(files, watchMode) {
+function compileTs(files, watchMode, es6Mode) {
     var inline = !argv.excludeSource;
     watchMode = watchMode || false;
+    es6Mode = es6Mode || false;
 
-    var tsProject = ts.createProject('tsconfig.json');
+    var srcConfig = {
+        base: config.src,
+        outDir: config.tmp
+    };
+
+    var tsConfig = {};
+
+    if (es6Mode) {
+        console.log('Compiling to ES6...');
+        tsConfig.target = 'es2015';
+        tsConfig.module = 'es2015';
+        typingFiles = [
+            config.src + 'manual_typings/**/*.d.ts'
+        ];
+    }
+
+    var tsProject = ts.createProject('tsconfig.json', tsConfig);
+
     var allFiles = [].concat(files, typingFiles);
-    var res = gulp.src(allFiles, {
-            base: config.src,
-            outDir: config.tmp
-        })
+
+    var res = gulp.src(allFiles, srcConfig)
         .pipe(tslint())
         .pipe(tslint.report('prose', {
             summarizeFailureOutput: true,
