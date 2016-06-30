@@ -11,7 +11,7 @@ var cssnano = require('gulp-cssnano');
 require('@ngstarter/systemjs-extension')(config);
 
 gulp.task('build', function (done) {
-    runSequence('test', 'build-systemjs', 'build-assets', done);
+    runSequence('build-systemjs', 'build-assets', done);
 });
 
 /* Concat and minify/uglify all css, js, and copy fonts */

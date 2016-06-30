@@ -48,10 +48,11 @@ module.exports = function () {
 
     var systemJs = {
         builder: {
-            normalize: true,
+            // normalize: true,
             minify: true,
             mangle: true,
-            runtime: false,
+            rollup: true,
+            runtime: true,
             globalDefs: { DEBUG: false, ENV: 'production' }
         }
     };

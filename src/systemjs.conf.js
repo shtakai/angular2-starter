@@ -64,8 +64,9 @@
     });
 
     ngPackageNames.forEach(function(pkgName) {
-        var main = global.ENV === 'testing' ? 'index.js' :
-            'bundles/' + pkgName + '.umd.js';
+        // var main = global.ENV === 'testing' ? 'index.js' :
+        //     'bundles/' + pkgName + '.umd.js';
+        var main = 'esm/index.js';
 
         packages['@angular/'+pkgName] = { main: main, defaultExtension: 'js' };
     });
