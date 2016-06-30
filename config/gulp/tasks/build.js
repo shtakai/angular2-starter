@@ -13,27 +13,34 @@ var commonjs = require('rollup-plugin-commonjs');
 
 require('@ngstarter/systemjs-extension')(config);
 
-gulp.task('rollup', function () {
+gulp.task('rollup', function (done) {
     rollup.rollup({
         entry: 'src/tmp/app/main.js',
         plugins: [
-            // nodeResolve({jsnext: true, main: true}),
-            // commonjs({ include: 'node_modules/**' })
+            nodeResolve({jsnext: true, main: true}),
+            commonjs({
+                include: [
+                    'node_modules/rxjs/**'
+                ]
+            })
         ]
     })
     .then(function (bundle) {
         console.log('Bundling done.');
-        bundle.write({
+        return bundle.write({
             format: 'cjs',
-            dest: 'rollup.bundle.js'
-        })
+            dest: 'src/tmp/app/main.js'
+        });
     }, function (err) {
         console.log(err);
+    })
+    .then(function () {
+        done();
     });
 });
 
 gulp.task('build', function (done) {
-    runSequence('test', 'build-systemjs', 'build-assets', done);
+    runSequence('build-systemjs', 'build-assets', done);
 });
 
 /* Concat and minify/uglify all css, js, and copy fonts */
