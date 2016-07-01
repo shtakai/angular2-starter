@@ -27,10 +27,6 @@ gulp.task('tsc', ['clean-ts'], function () {
     return compileTs(tsFiles);
 });
 
-gulp.task('tsc-es6', ['clean-ts'], function () {
-    return compileTs(tsFiles, false, true);
-});
-
 gulp.task('tsc-app', ['clean-ts-app'], function () {
     return compileTs(config.tsFiles);
 });
@@ -68,10 +64,10 @@ function lintTs(files) {
         }));
 }
 
-function compileTs(files, watchMode, es6Mode) {
-    var inline = !argv.excludeSource;
+function compileTs(files, watchMode) {
     watchMode = watchMode || false;
-    es6Mode = es6Mode || false;
+    var inline = !argv.excludeSource;
+    var es6Mode = argv.es6 || false;
 
     var srcConfig = {
         base: config.src,
